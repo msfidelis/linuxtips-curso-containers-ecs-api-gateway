@@ -1,0 +1,216 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Health API",
+      "version": "1.0"
+    },
+    "servers": [
+      {
+        "url": "http://health.linuxtips.demo",
+        "description": "dev"
+      }
+    ],
+    "paths": {
+      "/calculator": {
+        "post": {
+          "summary": "Calcula IMC e recomendações",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "age": {
+                      "type": "integer"
+                    },
+                    "weight": {
+                      "type": "number"
+                    },
+                    "height": {
+                      "type": "number"
+                    },
+                    "gender": {
+                      "type": "string"
+                    },
+                    "activity_intensity": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "integer"
+                      },
+                      "imc": {
+                        "type": "object",
+                        "properties": {
+                          "result": {
+                            "type": "number"
+                          },
+                          "class": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "basal": {
+                        "type": "object",
+                        "properties": {
+                          "bmr": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "necessity": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "health_info": {
+                        "type": "object",
+                        "properties": {
+                          "age": {
+                            "type": "integer"
+                          },
+                          "weight": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "gender": {
+                            "type": "string"
+                          },
+                          "activity_intensity": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "recomendations": {
+                        "type": "object",
+                        "properties": {
+                          "protein": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "water": {
+                            "type": "object",
+                            "properties": {
+                              "value": {
+                                "type": "number"
+                              },
+                              "unit": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "calories": {
+                            "type": "object",
+                            "properties": {
+                              "maintain_weight": {
+                                "type": "object",
+                                "properties": {
+                                  "value": {
+                                    "type": "number"
+                                  },
+                                  "unit": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "loss_weight": {
+                                "type": "object",
+                                "properties": {
+                                  "value": {
+                                    "type": "number"
+                                  },
+                                  "unit": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "gain_weight": {
+                                "type": "object",
+                                "properties": {
+                                  "value": {
+                                    "type": "number"
+                                  },
+                                  "unit": {
+                                    "type": "string"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "api_key": []
+            }
+          ],
+          "x-amazon-apigateway-integration": {
+            "responses": {
+              "default": {
+                "statusCode": "200"
+              }
+            },
+            "httpMethod": "POST",
+            "type": "http_proxy",
+            "uri": "http://health.linuxtips-ecs-cluster.internal.com/calculator",
+            "PassthroughBehavior": "WHEN_NO_MATCH",
+            "connectionType": "VPC_LINK",
+            "connectionId": "${stageVariables.vpcLinkId}"
+          }
+        }
+      }
+    },
+    "components": {
+      "securitySchemes": {
+        "api_key": {
+          "type": "apiKey",
+          "name": "x-api-key",
+          "in": "header"
+        }
+      }
+    }
+  }
